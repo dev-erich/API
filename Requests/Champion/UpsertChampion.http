@@ -1,0 +1,12 @@
+@id=00000000-0000-0000-0000-000000000000
+
+PUT http://localhost:5270/champions/{{id}}
+Content-Type: application/json
+
+{
+	"name": "Test",
+	"cost": {
+		"BlueEssence": 1800,
+		"RiotPoints": 200
+	}
+}

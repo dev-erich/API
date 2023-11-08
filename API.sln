@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30114.105
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LoLAPI", "LoLAPI\LoLAPI.csproj", "{9FBEBDC0-BE2B-42E6-9AA0-D3FB46F38994}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LoLAPI.Contracts", "LoLAPI.Contracts\LoLAPI.Contracts.csproj", "{0078961A-BEA5-4DD1-B963-4D9A8FADB170}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{9FBEBDC0-BE2B-42E6-9AA0-D3FB46F38994}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9FBEBDC0-BE2B-42E6-9AA0-D3FB46F38994}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9FBEBDC0-BE2B-42E6-9AA0-D3FB46F38994}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9FBEBDC0-BE2B-42E6-9AA0-D3FB46F38994}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0078961A-BEA5-4DD1-B963-4D9A8FADB170}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0078961A-BEA5-4DD1-B963-4D9A8FADB170}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0078961A-BEA5-4DD1-B963-4D9A8FADB170}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0078961A-BEA5-4DD1-B963-4D9A8FADB170}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
