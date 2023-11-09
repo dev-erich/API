@@ -2,13 +2,13 @@ POST http://localhost:5270/champions
 Content-Type: application/json
 
 {
-	"name": "Test",
+	"name": "Garen",
 	"cost": {
-		"BlueEssence": 1800,
-		"RiotPoints": 200
+		"BlueEssence": 3250,
+		"RiotPoints": 400
 	}
 }
 
 ###
 
-GET https://localhost:7193/Champions/aea5a030-e434-414c-a197-2b58edffbd1f
+GET https://localhost:7193/champions/aea5a030-e434-414c-a197-2b58edffbd1f

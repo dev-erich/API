@@ -1,82 +1,111 @@
-
+using ErrorOr;
 using LoLAPI.Contracts;
+using LoLAPI.Controllers;
 using LoLAPI.Models;
 using LoLAPI.Services.Champions;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Champions.Controllers;
 
-[ApiController]
-[Route("[controller]")]
-public class ChampionsController : ControllerBase
+public class ChampionsController : ApiController
 {
 
-	//* Dependancy injection
+	//* Constructor Dependancy injection
 	private readonly IChampionService _championService;
 	public ChampionsController(IChampionService championService)
 	{
 		_championService = championService;
 	}
 
+	//localhost:3000/champions
 	[HttpPost]
 	public IActionResult CreateChampion(CreateChampionRequest request)
 	{
-		var champion = new Champion(
-			Guid.NewGuid(),
-			request.Name,
-			request.Cost
-		);
+		ErrorOr<Champion> requestToChampionResult = Champion.From(request);
 
+		if (requestToChampionResult.IsError)
+		{
+			return Problem(requestToChampionResult.Errors);
+		}
+
+		var champion = requestToChampionResult.Value;
 		//TODO: save champion to database
-		_championService.CreateChampion(champion);
+		ErrorOr<Created> createChampionResult = _championService.CreateChampion(champion);
 
-		var response = new ChampionResponse(
-			champion.Id,
-			champion.Name,
-			champion.Cost
+		return createChampionResult.Match(
+			created => CreatedAtGetChampion(champion),
+			errors => Problem(errors)
 		);
-
-		return CreatedAtAction(
-			actionName: nameof(GetChampion),
-			routeValues: new { id = champion.Id },
-			value: response
-			);
 	}
 
+	//localhost:3000/champions/guid
 	[HttpGet("{id:guid}")]
 	public IActionResult GetChampion(Guid id)
 	{
-		Champion champion = _championService.GetChampion(id);
+		ErrorOr<Champion> getChampionResult = _championService.GetChampion(id);
 
-		var response = new ChampionResponse(
+		return getChampionResult.Match(
+			champion => Ok(MapChampionResponse(champion)),
+			errors => Problem(errors)
+		);
+
+	}
+
+	//localhost:3000/champions/guid
+	[HttpPut("{id:guid}")]
+	public IActionResult UpsertChampion(Guid id, UpsertChampionRequest request)
+	{
+		ErrorOr<Champion> requestToChampionResult = Champion.From(id, request);
+
+		if (requestToChampionResult.IsError)
+		{
+			return Problem(requestToChampionResult.Errors);
+		}
+
+		var champion = requestToChampionResult.Value;
+
+		ErrorOr<UpsertedChampion> upsertChampionResult = _championService.UpsetChampion(champion);
+
+		return upsertChampionResult.Match(
+			upserted => upserted.isNewlyCreated ? CreatedAtGetChampion(champion) : NoContent(),
+			errors => Problem(errors)
+		);
+	}
+
+	//localhost:3000/champions/guid
+	[HttpDelete("{id:guid}")]
+	public IActionResult DeleteChampion(Guid id)
+	{
+		ErrorOr<Deleted> deletedChampionResult = _championService.DeleteChampion(id);
+
+		return deletedChampionResult.Match(
+			deleted => NoContent(),
+			errors => Problem(errors)
+		);
+	}
+
+
+
+
+
+
+
+	private static ChampionResponse MapChampionResponse(Champion champion)
+	{
+		return new ChampionResponse(
 			champion.Id,
 			champion.Name,
 			champion.Cost
 		);
-
-		return Ok(response);
 	}
 
-	[HttpPut("{id:guid}")]
-	public IActionResult UpsetChampion(Guid id, UpsertChampionRequest request)
+	private IActionResult CreatedAtGetChampion(Champion champion)
 	{
-		var champion = new Champion(
-			id,
-			request.Name,
-			request.Cost
-		);
-
-		_championService.UpsetChampion(champion);
-
-		// TODO: return 201 if a new champion was created
-		return NoContent();
-	}
-
-	[HttpDelete("{id:guid}")]
-	public IActionResult DeleteChampion(Guid id)
-	{
-		_championService.DeleteChampion(id);
-		return NoContent();
+		return CreatedAtAction(
+			actionName: nameof(GetChampion),
+			routeValues: new { id = champion.Id },
+			value: MapChampionResponse(champion)
+			);
 	}
 
 }
